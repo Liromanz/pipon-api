@@ -46,6 +46,13 @@ class PublicUserApiTests (TestCase):
         self.assertFalse(user_exists)
 
     #Тесты токенов
+    def test_create_token_for_user(self):
+        create_user(email='test@user.com', password='testpass')
+        payload={'email': 'test@user.com', 'password': 'testpass'}
+        res = self.client.post(TOKEN_URL, payload)
+
+        self.assertIn('token', res.data)
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
 
     def test_create_token_invalid_credentials(self):
         create_user(email='test@user.com', password='testpass')
@@ -55,22 +62,25 @@ class PublicUserApiTests (TestCase):
         self.assertNotIn('token', res.data)
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
    
-    #Тесты ME
+     #Тесты ME
     def test_create_token_no_user(self):
         payload = {'email': 'test@admin.com', 'password': 'testpass'}
         res = self.client.post(TOKEN_URL, payload)
-
         self.assertNotIn('token', res.data)
         self.assertEqual(res.status_code, status. HTTP_400_BAD_REQUEST)
 
     def test_create_token_missing_field(self):
         res = self.client.post(TOKEN_URL, {'email': 'one', 'password': ''})
-
         self.assertNotIn('token', res.data)
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
+    
+    def test_retrieve_user_unauthorizied(self):
+        res = self.client.get(ME_URL)
+
+        self.assertEqual(res.status_code, status.HTTP_401_UNAUTHORIZED)
 
 class PrivateUserApiTests(TestCase):
-    
+  
     def setUp(self): 
         payload = {
             'email': 'test@user.com',
@@ -88,7 +98,6 @@ class PrivateUserApiTests(TestCase):
 
     def test_retrieve_profile_success(self):
         res = self.client.get(ME_URL)
-
         self.assertEqual(res.status_code, status.HTTP_200_OK) 
         self.assertEqual(res.data, {
             'name': self.user.name, 
@@ -97,16 +106,12 @@ class PrivateUserApiTests(TestCase):
 
     def test_post_me_not_allowed(self):
         res = self.client.post(ME_URL, {})
-
         self.assertEqual(res.status_code, status. HTTP_405_METHOD_NOT_ALLOWED)
 
     def test_update_user_profile(self):
         payload = {'name': 'new name', 'password': 'newpassword123'}
         res = self.client.patch(ME_URL, payload)
-
         self.user.refresh_from_db() 
         self.assertEqual(self.user.name, payload['name'])
         self.assertTrue(self.user.check_password(payload['password'])) 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
-
-
