@@ -47,8 +47,8 @@ class PublicUserApiTests (TestCase):
 
     #Тесты токенов
     def test_create_token_for_user(self):
-        create_user(email='test@user.com', password='testpass')
         payload={'email': 'test@user.com', 'password': 'testpass'}
+        create_user(**payload)
         res = self.client.post(TOKEN_URL, payload)
 
         self.assertIn('token', res.data)
