@@ -86,19 +86,19 @@ DATABASES = {
     }
 }
 
-#DATABASES = {
-#    'default': {
-#        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#        'NAME': 'django_db',
-#        'USER': 'newUser', #пользователь в самом верху postgre
-#        'PASSWORD': 'admin',
-#        'HOST': '127.0.0.1',
-#        'PORT': '5432',
-#        'OPTIONS':{
-#            'options': '-c search_path=django'
-#        },
-#    }
-#}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': 'django_db',
+#         'USER': 'newUser', #пользователь в самом верху postgre
+#         'PASSWORD': '1234567890',
+#         'HOST': '127.0.0.1',
+#         'PORT': '5432',
+#         'OPTIONS':{
+#             'options': '-c search_path=django'
+#         },
+#     }
+# }
 
 
 # Password validation
